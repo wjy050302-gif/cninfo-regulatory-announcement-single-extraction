@@ -1,0 +1,55 @@
+# Heuristic section routing rules.
+# The goal is to extract the "main body" paragraphs that contain:
+# - regulator / targets / issues / actions
+
+common:
+  exclude_regex:
+    - "目录"
+    - "声明"
+    - "释义"
+    - "重要提示"
+    - "摘要"
+
+inquiry_attention_body:
+  include_regex:
+    - "关注函"
+    - "问询函"
+    - "审核问询"
+    - "年报问询"
+    - "回复"
+    - "回函"
+    - "延期回复"
+  anchor_regex:
+    - "(?:现回复如下|回复如下|现将回复公告如下|现将有关回复说明如下|专项说明如下)"
+    - "(?:问题\\s*[一二三四五六七八九十0-9]+|事项\\s*[一二三四五六七八九十0-9]+)"
+    - "(?:请你公司|请公司|请发行人|请保荐机构|请保荐人|请会计师)"
+    - "(?:^|\\n)\\s*[一二三四五六七八九十]+、"
+    - "(?:请就以下事项|请对以下问题|回复意见)"
+  min_chars: 600
+  max_span_pages: 4
+  max_pages: 8
+  page_expansion:
+    before: 2
+    after: 1
+
+regulatory_measure_body:
+  include_regex:
+    - "行政监管措施"
+    - "监管措施"
+    - "决定书"
+    - "警示函"
+    - "责令改正"
+    - "监管谈话"
+    - "整改报告"
+  anchor_regex:
+    - "(?:经查[,，]|经现场检查|检查发现|存在以下问题|存在如下问题)"
+    - "(?:决定对|采取行政监管措施|采取监管谈话|出具警示函|责令改正)"
+    - "(?:整改措施|整改情况|改正情况|提交书面报告)"
+    - "(?:请你公司|责令你公司|限期整改)"
+    - "(?:^|\\n)\\s*[一二三四五六七八九十]+、"
+  min_chars: 600
+  max_span_pages: 4
+  max_pages: 6
+  page_expansion:
+    before: 1
+    after: 1

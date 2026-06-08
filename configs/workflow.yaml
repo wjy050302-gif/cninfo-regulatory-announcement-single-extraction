@@ -1,0 +1,30 @@
+paths:
+  repo_root: "."
+  data_dir: "data"
+  pdf_dir: "data/pdf"
+  parsed_dir: "data/parsed"
+  metadata_csv: "data/metadata/metadata.csv"
+
+  outputs_dir: "outputs"
+  logs_dir: "outputs/logs"
+  results_dir: "outputs/results"
+  reports_dir: "outputs/reports"
+  tmp_dir: "outputs/tmp"
+
+configs:
+  crawl_config: "configs/crawl_config.yaml"
+  model_config: "configs/model_config.yaml"
+  section_rules: "configs/section_rules.yaml"
+
+steps:
+  # The CLI enforces one of these steps
+  allowed:
+    - collect
+    - download
+    - audit
+    - parse
+    - route_sections
+    - extract
+    - validate
+    - report
+    - all

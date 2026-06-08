@@ -1,0 +1,90 @@
+# cninfo crawling (only public, no login)
+
+cninfo:
+  endpoint: "https://www.cninfo.com.cn/new/hisAnnouncement/query"
+  referer: "https://www.cninfo.com.cn/new/disclosure"
+  user_agent: "Mozilla/5.0"
+  tabName: "fulltext"
+
+scope:
+  # cninfo uses "column" as market selector; in practice:
+  # - szse: 深交所/创业板等
+  # - sse: 上交所/科创板等
+  columns: ["szse", "sse"]
+
+  # Fixed time range for reproducibility
+  seDate: "2023-01-01~2026-05-11"
+
+  # Query keys are intentionally broader than the final sample definition.
+  # Final inclusion is controlled by title_filters below.
+  search_keys:
+    - "关注函"
+    - "问询函"
+    - "审核问询"
+    - "年报问询"
+    - "回复"
+    - "回函"
+    - "延期回复"
+    - "行政监管措施"
+    - "监管措施决定书"
+    - "警示函"
+    - "责令改正"
+    - "监管谈话"
+    - "整改报告"
+
+  title_filters:
+    attention_keywords: ["关注函"]
+    inquiry_keywords: ["问询函", "审核问询", "年报问询"]
+    reply_keywords: ["回复", "回函", "延期回复"]
+    regulatory_measure_keywords:
+      [
+        "行政监管措施",
+        "监管措施决定书",
+        "警示函",
+        "责令改正",
+        "监管谈话",
+        "整改报告",
+      ]
+    exclude_keywords:
+      [
+        "募集说明书",
+        "发行保荐书",
+        "上市保荐书",
+        "法律意见书",
+        "评级报告",
+        "摘要",
+        "英文版",
+        "补充法律意见书",
+      ]
+    attachment_exclude_keywords:
+      [
+        "提示性公告",
+        "申请文件更新",
+        "募集说明书",
+        "法律意见书",
+        "专项说明",
+        "核查意见",
+        "律师事务所",
+        "会计师事务所",
+      ]
+    # If a title contains an exclude word but is clearly a reply / rectification /
+    # regulatory-disclosure context, keep it.
+    exclude_override_keywords:
+      ["回复", "回函", "延期回复", "整改报告", "警示函", "责令改正", "监管措施", "监管谈话"]
+
+  doc_type_priority:
+    ["regulatory_measure", "reply", "attention_letter", "inquiry_letter", "other"]
+
+limits:
+  # Standard 1.0: 80-150 docs, lock at 120
+  max_records: 120
+  page_size: 30
+
+rate_limit:
+  # polite crawling; cninfo can be unstable
+  sleep_seconds: 0.6
+  max_retries: 3
+  timeout_seconds: 30
+
+paths:
+  metadata_csv: "data/metadata/metadata.csv"

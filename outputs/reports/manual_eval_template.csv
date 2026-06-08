@@ -1,0 +1,6 @@
+doc_id,field_name,predicted_value,gold_value,is_correct,evidence_correct,error_type,notes
+,,,,,,,说明：固定抽取 20 篇 PDF，按字段级人工评估填写
+,,,,,,,建议字段：doc_type / regulator_name / targets[i].name / targets[i].target_type / issues[i].issue_type / issues[i].issue_summary / actions[i].action_type / actions[i].action_source_type / actions[i].deadline
+,,,,,,,is_correct: 1=正确 0=错误
+,,,,,,,evidence_correct: 1=evidence 是原文子串且支持该字段 0=evidence 不支持或页码错误
+,,,,,,,error_type 枚举：target_missing / issue_type_misclassified / issue_summary_incorrect / action_type_misclassified / action_source_type_wrong / action_requirement_confused / evidence_not_in_text / page_no_incorrect / doc_type_wrong

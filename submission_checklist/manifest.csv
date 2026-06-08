@@ -1,0 +1,38 @@
+category,required,source_path,note
+root_doc,yes,README.md,project overview + run commands
+root_doc,yes,topic_proposal.md,topic proposal (template-filled)
+root_doc,yes,crawl_spec.md,data scope/spec
+root_doc,yes,difficulty_declaration.md,difficulty level declaration
+root_doc,yes,workflow_design.md,workflow design writeup
+root_doc,yes,output_sample.md,output sample
+root_doc,yes,demo_script.md,demo script with fixed doc_id
+root_doc,yes,optimization_log.md,optimization history aligned with Week15 evaluation requirements
+root_doc,yes,final_report.md,final project report
+root_doc,yes,ai_usage_statement.md,AI usage statement
+root_doc,yes,ai_worklog_all.md,AI worklog
+root_doc,yes,CODING_RULES.md,repo rules for reproducibility + secrets + evidence constraints
+slides,yes,final_slides.pdf,final presentation slides
+code,yes,pipeline_run.py,entry point
+code,yes,requirements.txt,dependencies
+code,yes,src/,pipeline implementation
+config,yes,configs/,crawl/model/section/workflow configs
+prompt,yes,prompts/,prompt v1 + final
+data,yes,data/metadata/metadata.csv,cninfo metadata (traceable)
+data,yes,data/parsed/parsed_docs_sample.jsonl,small parsed sample for review
+data,optional,data/pdf/,downloaded PDFs (large)
+data,optional,data/parsed/,MinerU parsed outputs (large)
+outputs,yes,outputs/logs/sample_run_log.jsonl,pipeline run log
+outputs,yes,outputs/logs/parse_manifest.csv,parse manifest
+outputs,yes,outputs/logs/parse_failures.jsonl,parse failures (if any)
+outputs,yes,outputs/logs/extract_errors.jsonl,extract failures (if any)
+outputs,yes,outputs/logs/validation_errors.jsonl,validation repairs/errors
+outputs,yes,outputs/reports/dataset_check_report.md,dataset audit report
+outputs,yes,outputs/reports/parse_check.md,MinerU parse spot-check
+outputs,yes,outputs/reports/section_check_report.csv,section routing check report
+outputs,yes,outputs/reports/eval_report_final.md,final eval report
+outputs,yes,outputs/reports/manual_eval_template.csv,manual eval template
+outputs,yes,outputs/reports/manual_eval_filled_single_announcement.csv,manual eval (filled, single-announcement)
+outputs,optional,outputs/reports/code_review.md,internal code review notes
+outputs,yes,outputs/results/final_results.jsonl,final structured results with evidence
+checks,yes,sample_checks/,sample checks (evidence chain example)
+meta,optional,submission_checklist/,submission index folder (this folder)

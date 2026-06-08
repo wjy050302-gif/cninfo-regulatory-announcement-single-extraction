@@ -1,0 +1,26 @@
+# OpenAI-compatible chat completions config.
+# Values are read from environment variables.
+
+llm:
+  base_url_env: "LLM_BASE_URL"
+  api_key_env: "LLM_API_KEY"
+  model_env: "LLM_MODEL"
+  temperature: 0.0
+  timeout_seconds: 300
+  max_inflight_requests: 4
+  max_retries: 1
+  retry_backoff_seconds: 5.0
+  # Guardrails for long PDFs: limit the LLM input size derived from `sections.jsonl`.
+  # We keep only the first N `[Page X]` blocks and cap total characters.
+  input_max_pages: 5
+  input_max_chars: 20000
+
+mineru:
+  base_url_env: "MINERU_BASE_URL"
+  api_key_env: "MINERU_API_KEY"
+  timeout_seconds: 120
+  poll_interval_seconds: 2.0
+  max_wait_seconds: 420
+  max_inflight_tasks: 4
+  model_version: "pipeline"
+  max_failures_per_doc: 1

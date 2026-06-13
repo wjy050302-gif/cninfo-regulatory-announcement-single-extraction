@@ -15,24 +15,18 @@ from .schemas import (
     TARGET_TYPE_VALUES,
     RegulatoryDocExtract,
 )
-from .utils import ensure_parent_dir, is_substring, utc_now_iso, write_jsonl_line
+from .utils import aligned_substring, ensure_parent_dir, utc_now_iso, write_jsonl_line
 
 
 # Section router injects markers like "[Page 12]".
 _PAGE_MARK_RE = re.compile(r"\[Page\s+(\d+)\]")
-_ACTION_TYPE_HINTS: list[tuple[str, str]] = [
-    ("警示函", "warning_letter"),
-    ("监管谈话", "supervisory_talk"),
-    ("责令改正", "order_correction"),
-    ("书面报告", "written_report_required"),
-    ("书面说明", "written_report_required"),
-    ("报送书面报告", "written_report_required"),
-    ("补充披露", "disclosure_update_required"),
-    ("更新披露", "disclosure_update_required"),
-    ("披露材料", "disclosure_update_required"),
-    ("整改措施", "rectification_required"),
-    ("整改情况", "rectification_required"),
-    ("整改", "rectification_required"),
+_ACTION_TYPE_HINTS: list[tuple[tuple[str, ...], str]] = [
+    (("采取出具警示函", "出具警示函", "警示函措施"), "warning_letter"),
+    (("监管谈话",), "supervisory_talk"),
+    (("责令改正",), "order_correction"),
+    (("整改报告", "书面整改", "整改措施", "整改情况", "积极进行整改", "进行整改", "整改"), "rectification_required"),
+    (("书面报告", "书面说明", "报送书面报告"), "written_report_required"),
+    (("补充披露", "更新披露", "披露材料"), "disclosure_update_required"),
 ]
 
 
@@ -44,6 +38,23 @@ def _available_pages(section_text: str) -> set[int]:
         except Exception:
             pass
     return pages
+
+
+def _page_blocks(section_text: str) -> list[tuple[int | None, str]]:
+    text = section_text or ""
+    matches = list(_PAGE_MARK_RE.finditer(text))
+    if not matches:
+        return [(None, text)]
+    blocks: list[tuple[int | None, str]] = []
+    for i, m in enumerate(matches):
+        try:
+            page_no = int(m.group(1))
+        except Exception:
+            page_no = None
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        blocks.append((page_no, text[start:end]))
+    return blocks
 
 
 def _sanitize_page_no(page_no: int | None, available: set[int]) -> int | None:
@@ -66,10 +77,51 @@ def _is_optional_bool(v: Any) -> bool:
 
 def _infer_action_type_from_evidence(text: str) -> str | None:
     raw = text or ""
-    for needle, action_type in _ACTION_TYPE_HINTS:
-        if needle in raw:
-            return action_type
-    return None
+    matched: list[str] = []
+    for needles, action_type in _ACTION_TYPE_HINTS:
+        if any(needle in raw for needle in needles):
+            matched.append(action_type)
+    unique = list(dict.fromkeys(matched))
+    # A single evidence sentence can mention multiple actions. In that case the
+    # validator should not overwrite the model's more specific item-level label.
+    return unique[0] if len(unique) == 1 else None
+
+
+def _locate_evidence(
+    section_text: str, evidence_text: str, claimed_page_no: int | None
+) -> tuple[str, int | None] | None:
+    if not section_text or not evidence_text:
+        return None
+
+    blocks = _page_blocks(section_text)
+
+    def _match_in_block(text: str) -> str | None:
+        return aligned_substring(text, evidence_text)
+
+    if claimed_page_no is not None:
+        for page_no, block_text in blocks:
+            if page_no != claimed_page_no:
+                continue
+            matched = _match_in_block(block_text)
+            if matched is not None:
+                return matched, claimed_page_no
+
+    matches: list[tuple[str, int | None]] = []
+    for page_no, block_text in blocks:
+        matched = _match_in_block(block_text)
+        if matched is not None:
+            matches.append((matched, page_no))
+
+    if not matches:
+        return None
+    if len(matches) == 1:
+        return matches[0]
+
+    first_text = matches[0][0]
+    if all(text == first_text for text, _ in matches):
+        return first_text, None
+
+    return first_text, None
 
 
 def validate_and_repair(
@@ -141,13 +193,17 @@ def validate_and_repair(
                 if not isinstance(et, str) or not et.strip():
                     errors.append(f"{path}: missing evidence_text")
                     return None
-                if not is_substring(section_text, et):
+                claimed_page_no = _sanitize_page_no(e.get("page_no"), available_pages)
+                located = _locate_evidence(section_text, et, claimed_page_no)
+                if located is None:
                     errors.append(f"{path}: evidence_text not substring")
                     return None
-                pn = e.get("page_no")
-                pn2 = _sanitize_page_no(pn, available_pages)
-                if pn != pn2:
-                    e["page_no"] = pn2
+                matched_text, matched_page_no = located
+                if e.get("evidence_text") != matched_text:
+                    e["evidence_text"] = matched_text
+                    changed = True
+                if e.get("page_no") != matched_page_no:
+                    e["page_no"] = matched_page_no
                     changed = True
                 return e
 
@@ -288,9 +344,13 @@ def validate_and_repair(
                             changed = True
                         deadline = it.get("deadline")
                         if isinstance(deadline, str) and deadline.strip():
-                            if deadline not in str(ev.get("evidence_text") or ""):
+                            matched_deadline = aligned_substring(str(ev.get("evidence_text") or ""), deadline)
+                            if matched_deadline is None:
                                 errors.append(f"actions[{i}]: deadline cleared because evidence does not support it")
                                 it["deadline"] = None
+                                changed = True
+                            elif matched_deadline != deadline:
+                                it["deadline"] = matched_deadline
                                 changed = True
                         kept_actions.append(it)
                     if len(kept_actions) != len(actions):

@@ -47,10 +47,53 @@ def sleep_with_jitter(seconds: float, jitter: float = 0.2) -> None:
     time.sleep(seconds + (jitter * (0.5 - os.urandom(1)[0] / 255.0)))
 
 
+_MATCH_WHITESPACE_RE = re.compile(r"[\s\u00A0\u3000]+")
+
+
+def normalize_for_match(s: str) -> str:
+    # For evidence matching, ignore whitespace-only OCR / formatting differences
+    # but keep all non-whitespace characters strict.
+    return _MATCH_WHITESPACE_RE.sub("", s or "")
+
+
+def aligned_substring(haystack: str, needle: str) -> str | None:
+    if not haystack or not needle:
+        return None
+    idx = haystack.find(needle)
+    if idx >= 0:
+        return haystack[idx : idx + len(needle)]
+
+    norm_h_chars: list[str] = []
+    norm_h_pos: list[int] = []
+    for i, ch in enumerate(haystack):
+        if ch.isspace() or ch in {"\u00A0", "\u3000"}:
+            continue
+        norm_h_chars.append(ch)
+        norm_h_pos.append(i)
+
+    norm_n_chars: list[str] = []
+    for ch in needle:
+        if ch.isspace() or ch in {"\u00A0", "\u3000"}:
+            continue
+        norm_n_chars.append(ch)
+
+    norm_h = "".join(norm_h_chars)
+    norm_n = "".join(norm_n_chars)
+    if not norm_h or not norm_n:
+        return None
+
+    idx2 = norm_h.find(norm_n)
+    if idx2 < 0:
+        return None
+    start = norm_h_pos[idx2]
+    end = norm_h_pos[idx2 + len(norm_n) - 1] + 1
+    return haystack[start:end]
+
+
 def is_substring(haystack: str, needle: str) -> bool:
     if not haystack or not needle:
         return False
-    return needle in haystack
+    return aligned_substring(haystack, needle) is not None
 
 
 def chunked(iterable: Iterable[Any], n: int) -> Iterable[list[Any]]:
@@ -62,4 +105,3 @@ def chunked(iterable: Iterable[Any], n: int) -> Iterable[list[Any]]:
             buf = []
     if buf:
         yield buf
-

@@ -851,3 +851,30 @@ proposal、代码、报告、人工评估、demo、提交清单现在是同一�
 - **优化已完成**
 - **准确率提升方向明确**
 - **真实提升幅度仍需通过下一轮 `route_sections -> extract -> validate -> report` 再验证**
+
+---
+
+## 2026-06-13 补充：新版 prompt 重跑后的验证结果
+
+### 发现的问题
+- 新版 prompt 和模型 `nex-agi/Nex-N2-Pro` 全量重跑后，`extract` 首轮结果为 106 成功、10 失败。
+- 失败主要来自远端 LLM timeout；这说明 prompt 优化不能完全解决接口稳定性问题。
+- 如果不处理这些失败，最终结果数量会从 section 的 116 条下降到 106 条，影响样本覆盖率。
+
+### 修改和处理
+- 对失败的 10 个 `doc_id` 使用 `scripts/retry_extract_subset.py` 单独重试。
+- 将 timeout 从默认 300 秒延长到 900 秒。
+- retry 成功 9 条，失败 1 条：`1224517046`，原因是远端 API 500。
+- 将 retry 成功结果合并回正式输出，并重新运行 `validate` 和 `report`。
+
+### 为什么这样处理
+- timeout 属于运行环境和远端服务稳定性问题，不应通过手工改结果解决。
+- 延长 timeout 可以在不改变数据、不降低 validator 标准的情况下提高完成率。
+- API 500 无法通过本地规则修复，因此保留为真实失败并写入日志。
+
+### 实际效果
+- `final_results.jsonl`: 115 条
+- `extract_errors.jsonl`: 1 条
+- `validation_errors.jsonl`: 39 条
+- `validate` 日志：total = 115, ok = 115, repaired = 39, dropped = 0
+- 相比优化前 `repaired=70`，本轮 validator 修复量下降到 39，说明 evidence 复制规则、whitespace-tolerant 修复和 action_type 优先级修正对减少无效错误有效。

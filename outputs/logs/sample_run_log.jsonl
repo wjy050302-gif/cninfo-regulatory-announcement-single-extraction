@@ -419,3 +419,34 @@
 {"ts": "2026-06-08T07:04:30Z", "step": "validate", "level": "info", "message": "done", "total": 116, "ok": 116, "repaired": 77, "dropped": 0, "deduped": 0}
 {"ts": "2026-06-08T07:04:30Z", "step": "report", "level": "info", "message": "done", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/eval_report_final.md"}
 {"ts": "2026-06-08T07:04:30Z", "step": "report", "level": "info", "message": "self_review_written", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/self_review.md"}
+{"ts": "2026-06-12T16:23:09Z", "step": "validate", "level": "info", "message": "start", "extracted": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/tmp/extracted.jsonl"}
+{"ts": "2026-06-12T16:23:09Z", "step": "report", "level": "info", "message": "done", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/eval_report_final.md"}
+{"ts": "2026-06-12T16:23:09Z", "step": "report", "level": "info", "message": "self_review_written", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/self_review.md"}
+{"ts": "2026-06-12T16:23:09Z", "step": "validate", "level": "info", "message": "done", "total": 116, "ok": 116, "repaired": 70, "dropped": 0, "deduped": 0}
+{"ts": "2026-06-12T16:23:56Z", "step": "report", "level": "info", "message": "done", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/eval_report_final.md"}
+{"ts": "2026-06-12T16:23:56Z", "step": "report", "level": "info", "message": "self_review_written", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/self_review.md"}
+{"ts": "2026-06-12T16:40:10Z", "step": "extract", "level": "info", "message": "start", "prompt": "/Users/wjy/Documents/Codex project/学术/final_repo/prompts/prompt_final.md"}
+{"ts": "2026-06-12T16:59:04Z", "step": "extract", "level": "info", "message": "start", "prompt": "/Users/wjy/Documents/Codex project/学术/final_repo/prompts/prompt_final.md"}
+{"ts": "2026-06-12T17:08:42Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225291749", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T17:41:15Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225212106", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T17:41:15Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225190456", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T17:59:03Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1224517046", "error": "500 Server Error: Internal Server Error for url: https://api.siliconflow.cn/v1/chat/completions"}
+{"ts": "2026-06-12T18:08:06Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225280650", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T18:14:42Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225280461", "error": "500 Server Error: Internal Server Error for url: https://api.siliconflow.cn/v1/chat/completions"}
+{"ts": "2026-06-12T18:20:42Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225280413", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T18:31:14Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225271364", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T18:49:06Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225188351", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T18:49:14Z", "step": "extract", "level": "error", "message": "extract_failed", "doc_id": "1225184758", "error": "HTTPSConnectionPool(host='api.siliconflow.cn', port=443): Read timed out. (read timeout=300)"}
+{"ts": "2026-06-12T19:07:43Z", "step": "extract", "level": "info", "message": "done", "total": 116, "ok": 106, "failed": 10}
+{"ts": "2026-06-13T00:42:58Z", "step": "extract_retry", "level": "info", "message": "start", "total": 10, "requested_doc_ids": ["1224517046", "1225184758", "1225188351", "1225190456", "1225212106", "1225271364", "1225280413", "1225280461", "1225280650", "1225291749"], "missing_doc_ids": [], "timeout_seconds": 900}
+{"ts": "2026-06-13T00:47:36Z", "step": "extract_retry", "level": "error", "message": "extract_failed", "doc_id": "1224517046", "error": "500 Server Error: Internal Server Error for url: https://api.siliconflow.cn/v1/chat/completions"}
+{"ts": "2026-06-13T01:07:47Z", "step": "extract_retry", "level": "info", "message": "done", "total": 10, "ok": 9, "failed": 1, "out_dir": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/tmp/retry_extract_20260613_084258"}
+{"ts": "2026-06-13T01:08:48Z", "step": "extract_retry_merge", "level": "info", "message": "merged_retry_outputs", "main_before": 106, "retry_ok": 9, "merged_ok": 115, "remaining_failed": 1, "retry_dir": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/tmp/retry_extract_20260613_084258"}
+{"ts": "2026-06-13T01:09:02Z", "step": "validate", "level": "info", "message": "start", "extracted": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/tmp/extracted.jsonl"}
+{"ts": "2026-06-13T01:09:02Z", "step": "validate", "level": "info", "message": "done", "total": 115, "ok": 115, "repaired": 49, "dropped": 0, "deduped": 0}
+{"ts": "2026-06-13T01:09:16Z", "step": "report", "level": "info", "message": "done", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/eval_report_final.md"}
+{"ts": "2026-06-13T01:09:16Z", "step": "report", "level": "info", "message": "self_review_written", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/self_review.md"}
+{"ts": "2026-06-13T01:16:32Z", "step": "validate", "level": "info", "message": "start", "extracted": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/tmp/extracted.jsonl"}
+{"ts": "2026-06-13T01:16:32Z", "step": "validate", "level": "info", "message": "done", "total": 115, "ok": 115, "repaired": 39, "dropped": 0, "deduped": 0}
+{"ts": "2026-06-13T01:16:37Z", "step": "report", "level": "info", "message": "done", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/eval_report_final.md"}
+{"ts": "2026-06-13T01:16:37Z", "step": "report", "level": "info", "message": "self_review_written", "report": "/Users/wjy/Documents/Codex project/学术/final_repo/outputs/reports/self_review.md"}

@@ -201,7 +201,8 @@ cninfo 监管公告单公告结构化抽取
   - 原因：LLM JSON 输出格式失败
 
 ### 影响
-- `final_results.jsonl` 从 `108` 提升到 `116`
+- 历史阶段结果：`final_results.jsonl` 从 `108` 提升到 `116`
+- 当前最新版结果已由 2026-06-13 重跑替代：`final_results.jsonl = 115`
 
 ---
 
@@ -223,8 +224,8 @@ cninfo 监管公告单公告结构化抽取
   - 无效 item 直接丢弃或修正
 
 ### 结果
-- 当前 `validate` 对 116 条全部通过
-- 共记录 `60` 条修复，但未丢弃任何记录
+- 历史阶段：`validate` 对 116 条全部通过，共记录 `60` 条修复
+- 当前最新版：`validate` 对 115 条全部通过，共记录 `39` 条修复，未丢弃任何记录
 
 ---
 
@@ -341,9 +342,9 @@ cninfo 监管公告单公告结构化抽取
 - `data/pdf = 120`
 - `parsed_docs.jsonl = 116`
 - `sections.jsonl = 116`
-- `final_results.jsonl = 116`
+- `final_results.jsonl = 115`
 - unresolved parse failure = 4
-- unresolved extract failure = 0
+- unresolved extract failure = 1
 
 ### 当前正在进行的动作
 - 2026-06-08 已按新优化规则重跑：
@@ -376,3 +377,40 @@ cninfo 监管公告单公告结构化抽取
 可以说：
 
 > 本项目已经形成可提交、可复现、可评估的单公告抽取系统。当前稳定结果为 116 条，extract 侧失败样本已通过单独延时重试全部补回。当前剩余缺口主要集中在 4 份超长回复公告的 MinerU 解析失败。
+
+---
+
+## 十三、2026-06-13 最终重跑与延时重试结果
+
+### 发现的问题
+- 使用新版 prompt 和 `nex-agi/Nex-N2-Pro` 完整重跑 `extract` 后，116 条 section 中有 106 条直接成功、10 条失败。
+- 10 条失败里大部分是远端 LLM read timeout，说明不是本地数据缺失，也不是 MinerU 解析缺失，而是模型接口对长文本响应不稳定。
+- 直接把 106 条作为最终结果会导致 `sections.jsonl` 与 `final_results.jsonl` 数量不一致，不利于提交和答辩解释。
+
+### 处理方法
+- 对这 10 条失败样本单独运行 `scripts/retry_extract_subset.py`，把 timeout 从 300 秒延长到 900 秒，并降低并发压力。
+- 重试完成后，10 条中 9 条成功，1 条仍失败：`1224517046`，失败原因为远端 API `500 Internal Server Error`。
+- 将 9 条成功 retry 输出按 `doc_id` 合并回正式 `outputs/tmp/extracted.jsonl` 和 `outputs/tmp/llm_raw.jsonl`。
+- 将正式失败清单收敛为 1 条，保留在 `outputs/logs/extract_errors.jsonl`，不静默删除失败。
+- 重新执行 `validate` 和 `report`，使 `final_results.jsonl`、`validation_errors.jsonl`、`eval_report_final.md` 全部基于最新抽取结果生成。
+
+### 为什么这样修改
+- 这类失败不是数据真实性问题，而是远端接口稳定性问题；延长 timeout 是最小、可解释、可复现的处理方式。
+- 不重跑 MinerU，因为 PDF 解析结果和 section routing 已经完成，本轮问题只发生在 LLM 抽取阶段。
+- 不手工补写失败样本，避免编造数据；失败样本只记录失败原因。
+
+### 最新稳定口径
+- `metadata.csv = 120`
+- `data/pdf = 120`
+- `parsed_docs.jsonl = 116`
+- `sections.jsonl = 116`
+- `extracted.jsonl = 115`
+- `final_results.jsonl = 115`
+- unresolved parse failure = 4
+- unresolved extract failure = 1（`1224517046`，远端 API 500）
+- `validate`: total = 115, ok = 115, repaired = 39, dropped = 0
+
+### 汇报时最准确的说法
+可以说：
+
+> 本项目最终形成 115 条通过 Pydantic 和 evidence 校验的结构化结果。原始样本 120 条中，4 条在 MinerU 解析阶段失败，1 条在 LLM 抽取阶段因远端 API 500 失败。所有失败都有日志记录，没有人工编造或静默补齐。

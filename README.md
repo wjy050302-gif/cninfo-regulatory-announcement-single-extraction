@@ -73,7 +73,8 @@ python pipeline_run.py --step report
 - `data/pdf/`: 120 份 PDF
 - `data/parsed/parsed_docs.jsonl`: 116 条解析成功
 - `data/parsed/sections.jsonl`: 116 条 section
-- `outputs/results/final_results.jsonl`: 116 条通过证据校验的最终结果
+- `outputs/results/final_results.jsonl`: 115 条通过证据校验的最终结果
+- `outputs/logs/extract_errors.jsonl`: 1 条远端 LLM API 500 失败记录
 - `outputs/reports/manual_eval_filled_single_announcement.csv`: 20 篇样本、105 行字段级人工评估
 - `outputs/reports/eval_report_final.md`: 最终五类指标 + 错误分析报告
 - `optimization_log.md`: prompt / routing / validator 的优化记录

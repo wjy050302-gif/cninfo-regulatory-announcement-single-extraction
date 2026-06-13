@@ -36,7 +36,7 @@
 ### 4. 真实性约束
 - 当前报告与结果都保持真实口径：
   - `parsed_docs=116`
-  - `final_results=116`
+  - `final_results=115`
   - `extract` 失败样本已通过定向延时重试全部补回
   - `parse` 仍剩 4 条失败
 
@@ -52,21 +52,21 @@
 
 ### 3. `final_slides.pdf` 已更新
 - 现状：
-  - Slide 6 已更新为 `extract ok=116/116`、`final_results=116`
+  - Slide 6 已更新为 `extract ok=115/116`、`final_results=115`
   - Slide 8 已更新为最终结果 `116`
   - Slide 4 已明确展示 `action_source_type`
 
 ### 4. `README.md` 已同步最新数字
 - 文件：`README.md:71-80`
 - 现状：
-  - `final_results.jsonl` 已更新为 `116`
+  - `final_results.jsonl` 已更新为 `115`
   - 新增 `optimization_log.md` 与 `final_report.md` 的说明
 
 ### 5. `final_slides_notes.md` 已同步最新口径
 - 文件：`final_slides_notes.md`
 - 现状：
-  - 已更新 `extract ok=116/116`
-  - 已更新 `final_results=116`
+  - 已更新 `extract ok=115/116`
+  - 已更新 `final_results=115`
   - 已补入 2026-06-08 优化内容
 
 ## 可接受但建议统一的点
@@ -84,7 +84,8 @@
 
 - `metadata.csv`: 120
 - `parsed_docs.jsonl`: 116
-- `final_results.jsonl`: 116
+- `final_results.jsonl`: 115
+- `extract_errors.jsonl`: 1
 - `extract` 延时重试：4/4 成功
 
 ## 当前建议

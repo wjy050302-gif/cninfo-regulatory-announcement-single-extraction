@@ -1,4 +1,4 @@
-# Self Review (2026-06-08T07:04:30Z)
+# Self Review (2026-06-13T01:16:37Z)
 
 ## Required Files (existence)
 - OK: `README.md`
@@ -31,9 +31,9 @@
 - `data/parsed/parsed_docs.jsonl`: exists (4149870 bytes)
 - `data/parsed/sections.jsonl`: exists (497132 bytes)
 - `outputs/reports/section_check_report.csv`: exists (43449 bytes)
-- `outputs/tmp/extracted.jsonl`: exists (371929 bytes)
-- `outputs/results/final_results.jsonl`: exists (295488 bytes)
-- `outputs/logs/validation_errors.jsonl`: exists (20828 bytes)
+- `outputs/tmp/extracted.jsonl`: exists (487337 bytes)
+- `outputs/results/final_results.jsonl`: exists (469501 bytes)
+- `outputs/logs/validation_errors.jsonl`: exists (8312 bytes)
 - `outputs/logs/parse_manifest.csv`: exists (13101 bytes)
 
 ## Action Items

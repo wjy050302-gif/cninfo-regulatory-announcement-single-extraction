@@ -52,7 +52,7 @@
 - `extract` -> `outputs/tmp/extracted.jsonl`
 - `validate` -> `outputs/results/final_results.jsonl`
 - `report` -> `outputs/reports/eval_report_final.md`
-- 当前全量结果：`extract ok=116/116`，`final_results=116`
+- 当前全量结果：`extract ok=115/116`，`final_results=115`，剩余 1 条为远端 LLM API 500 失败
 
 ## 7. Demo
 - 固定样本：`doc_id=1225290815`
@@ -69,7 +69,7 @@
   - `actions[0].action_source_type = regulator_required`
 
 ## 8. 评估结果
-- 最终结果数：`116`
+- 最终结果数：`115`
 - 人工评估：20 篇 PDF，105 行字段级评估
 - 准确率：
   - `doc_type`: `16/20 = 80.0%`
@@ -93,6 +93,7 @@
 - extract 增加并发、超时重试、长文本截断和坏 item 清洗
 - validator 增加枚举合法性和 evidence/page_no 硬校验
 - 2026-06-08 新增优化：reply 路由跳过目录页；prompt 强化 listed_company / deadline / action_type 规则；validator 基于 evidence 修正明显错误的 action_type 并清除无证据支持的 deadline
+- 2026-06-13 新增优化：对 10 条 extract 失败样本做 900 秒延时重试，补回 9 条；同时修正 validator 的 action_type 优先级，避免把公司整改承诺误修成警示函动作
 
 ## 10. Vibe Coding 反思
 - 先与 AI 写清楚目标、输入输出、约束、done definition，再让 AI 落代码，而不是直接让 AI 自由生成

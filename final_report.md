@@ -53,12 +53,13 @@ cninfo 监管公告单公告结构化抽取（标准档 1.0）
 - `data/pdf/`: 120
 - `data/parsed/parsed_docs.jsonl`: 116
 - `data/parsed/sections.jsonl`: 116
-- `outputs/results/final_results.jsonl`: 116
+- `outputs/results/final_results.jsonl`: 115
 
 说明：
 - MinerU `parse` 仍有 4 份超时失败
-- `extract` 经单独补跑后已从 108 提升到 116
-- 2026-06-08 对 4 条 `extract` 失败样本做延时重试后，4 条全部补回
+- `extract` 首轮新版重跑为 106 条成功，之后对 10 条失败样本做 900 秒延时重试
+- 延时重试补回 9 条，剩余 1 条 `1224517046` 为远端 LLM API 500 失败
+- 最终 115 条进入 `validate`，全部通过 Pydantic、evidence 和 page_no 校验
 
 ## 7. 评估结果
 人工评估样本：20 篇 PDF，105 行字段级标注

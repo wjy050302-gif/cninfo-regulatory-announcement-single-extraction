@@ -148,7 +148,8 @@
   - 原因：`failed to parse JSON object from LLM output`
 
 ### 最终影响
-- `final_results.jsonl` 从 `108` 提升到 `116`
+- 历史阶段结果：`final_results.jsonl` 从 `108` 提升到 `116`
+- 当前最新版结果已由 2026-06-13 重跑替代：`final_results.jsonl = 115`
 
 ## 9. validate 与 evidence 校验
 ### 发现
@@ -161,8 +162,8 @@
   - 枚举字段必须合法
 
 ### 结果
-- 当前 `validate` 对 116 条记录全部通过
-- 并做了 60 处修复，但没有丢记录
+- 历史阶段：`validate` 对 116 条记录全部通过，并做了 60 处修复
+- 当前最新版：`validate` 对 115 条记录全部通过，记录 39 条修复，0 条丢弃
 
 ## 10. 提交物整理与安全问题
 ### 发现
@@ -183,13 +184,13 @@
 - pdf：120
 - parsed_docs：116
 - sections：116
-- final_results：116
+- final_results：115
 - unresolved extract failure：1
 - unresolved parse failure：4
 
 ## 12. 当前仍存在的明确缺口
 - 4 份公告仍未完成 MinerU 解析
-- 1 份公告仍未完成 extract（JSON 输出格式失败）
+- 1 份公告仍未完成 extract（远端 LLM API 500）
 
 结论：
 - 当前项目已经达到可提交状态
@@ -244,3 +245,28 @@
 - 这轮优化完成后，**不需要重跑 MinerU**
 - 只需要重跑 `route_sections -> extract -> validate -> report`
 - 是否提升准确率，要以重跑后的新 `eval_report_final.md` 为准
+
+## 14. 2026-06-13 新版 extract 重跑与延时 retry 结果
+### 发生了什么
+- 按新版 prompt 和模型配置重跑 `extract` 后，116 条 section 中先得到 106 条成功结果，10 条失败。
+- 失败原因主要是远端 LLM read timeout，另有 API 服务端 500。
+- 为避免直接以 106 条作为最终结果，对这 10 条失败样本单独做延时重试。
+
+### 如何处理
+- 使用 `scripts/retry_extract_subset.py` 对失败 `doc_id` 单独重试。
+- timeout 延长至 900 秒，并降低并发，减少长文档回复被提前中断的概率。
+- retry 结果：10 条中 9 条成功，1 条 `1224517046` 仍失败，原因是远端 API 500。
+- 已将 9 条 retry 成功结果合并回正式抽取文件。
+- 已重新执行 `validate` 和 `report`。
+
+### 最新结果
+- `sections.jsonl`: 116
+- `outputs/tmp/extracted.jsonl`: 115
+- `outputs/results/final_results.jsonl`: 115
+- `outputs/logs/extract_errors.jsonl`: 1
+- `validate`: total = 115, ok = 115, repaired = 39, dropped = 0
+
+### 对项目的影响
+- 最终结果从 106 条提升到 115 条。
+- 失败样本只剩 1 条，并且失败原因可解释、可追溯。
+- 没有手工伪造抽取结果，符合“数据真实有效”和 evidence 可回溯要求。

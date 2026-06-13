@@ -1,0 +1,2 @@
+﻿doc_id,stock_code,stock_name,market,publish_date,announcement_title,announcement_type,title_rule_doc_type,url,pdf_url,adjunct_url,search_key,matched_search_keys,source,crawl_time,download_status,local_pdf_path,error_message,notes
+1225290815,300135,宝利国际,szse,2026-05-11,关于收到江苏证监局警示函的公告,01010503||010112||010115||012399,regulatory_measure,http://static.cninfo.com.cn/finalpage/2026-05-11/1225290815.PDF,http://static.cninfo.com.cn/finalpage/2026-05-11/1225290815.PDF,finalpage/2026-05-11/1225290815.PDF,警示函,警示函,cninfo,2026-05-24T03:05:26Z,skipped,data/pdf/1225290815.pdf,,

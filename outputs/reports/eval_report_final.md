@@ -1,4 +1,4 @@
-# Eval Report (Final) (2026-06-08T07:04:30Z)
+# Eval Report (Final) (2026-06-13T01:16:37Z)
 
 本报告覆盖课程要求五类指标：数据质量、Section 质量、抽取质量、证据质量、Pipeline 稳定性。
 
@@ -28,66 +28,67 @@
 - ok rate: 79.7%（185/232）
 
 ## 4. 抽取质量 (Extraction Quality)
-- extracted (Pydantic 通过) 记录: **116** (`outputs/tmp/extracted.jsonl`)
-- final results (经证据校验): **116** (`outputs/results/final_results.jsonl`)
-- validation errors/repairs: **77** (`outputs/logs/validation_errors.jsonl`)
+- extracted (Pydantic 通过) 记录: **115** (`outputs/tmp/extracted.jsonl`)
+- final results (经证据校验): **115** (`outputs/results/final_results.jsonl`)
+- validation errors/repairs: **39** (`outputs/logs/validation_errors.jsonl`)
 
 ### doc_type 分布
 - `reply`: 57
-- `regulatory_measure`: 51
-- `attention_letter`: 8
+- `regulatory_measure`: 56
+- `other`: 1
+- `attention_letter`: 1
 
 ### 文档级字段填充率
 | 字段 | 填充数 | 总数 | 填充率 |
 |---|---|---|---|
-| `regulator_name` | 77 | 116 | 66.4% |
-| `targets` | 111 | 116 | 95.7% |
-| `issues` | 80 | 116 | 69.0% |
-| `actions` | 102 | 116 | 87.9% |
+| `regulator_name` | 87 | 115 | 75.7% |
+| `targets` | 114 | 115 | 99.1% |
+| `issues` | 102 | 115 | 88.7% |
+| `actions` | 110 | 115 | 95.7% |
 
 ### 结构化列表项统计
-- targets item 总数: **288**
-- issues item 总数: **183**
-- actions item 总数: **175**
+- targets item 总数: **295**
+- issues item 总数: **198**
+- actions item 总数: **305**
 
 ### target_type 分布
-- `listed_company`: 110
-- `executive`: 53
-- `director`: 30
-- `other`: 24
-- `controlling_shareholder`: 19
-- `shareholder_other`: 13
-- `subsidiary`: 13
+- `listed_company`: 111
+- `executive`: 59
+- `other`: 33
+- `director`: 31
+- `intermediary`: 18
+- `shareholder_other`: 15
 - `actual_controller`: 12
-- `intermediary`: 10
-- `supervisor`: 4
+- `controlling_shareholder`: 12
+- `subsidiary`: 4
 
 ### issue_type 分布
-- `information_disclosure`: 99
-- `internal_control`: 26
-- `financial_irregularity`: 23
-- `related_party_transaction`: 10
-- `fund_occupation`: 8
-- `raised_funds`: 8
-- `other`: 7
-- `mna_restructuring`: 2
+- `financial_irregularity`: 53
+- `information_disclosure`: 53
+- `internal_control`: 32
+- `related_party_transaction`: 16
+- `other`: 13
+- `raised_funds`: 12
+- `fund_occupation`: 10
+- `mna_restructuring`: 9
 
 ### action_type 分布
-- `rectification_required`: 63
-- `inquiry_reply_required`: 29
-- `written_report_required`: 25
-- `disclosure_update_required`: 20
-- `warning_letter`: 15
-- `order_correction`: 13
-- `supervisory_talk`: 10
+- `rectification_required`: 101
+- `inquiry_reply_required`: 63
+- `warning_letter`: 37
+- `order_correction`: 33
+- `other`: 32
+- `written_report_required`: 18
+- `supervisory_talk`: 12
+- `disclosure_update_required`: 9
 
 ### action_source_type 分布
-- `regulator_required`: 151
-- `company_committed`: 24
+- `regulator_required`: 202
+- `company_committed`: 103
 
 ## 5. 证据质量 (Evidence Quality)
-- evidence 总数: **723**
-- page_no 覆盖率: 100.0%（723/723）
+- evidence 总数: **885**
+- page_no 覆盖率: 100.0%（885/885）
 - 硬校验: evidence_text 必须是输入 section_text 的子串，否则置 null 或丢弃
 
 ## 6. Pipeline 稳定性
@@ -96,12 +97,13 @@
 | `audit` | 1 | 0 | 0 |
 | `collect` | 2 | 0 | 0 |
 | `download` | 2 | 0 | 0 |
-| `extract` | 15 | 142 | 0 |
-| `extract_retry` | 3 | 0 | 0 |
+| `extract` | 18 | 152 | 0 |
+| `extract_retry` | 5 | 1 | 0 |
+| `extract_retry_merge` | 1 | 0 | 0 |
 | `parse` | 230 | 4 | 0 |
-| `report` | 8 | 0 | 0 |
+| `report` | 16 | 0 | 0 |
 | `route_sections` | 4 | 0 | 0 |
-| `validate` | 8 | 0 | 0 |
+| `validate` | 14 | 0 | 0 |
 
 ## 7. 人工评估 (Manual Evaluation)
 - 主评估口径: 字段级人工评估（单公告抽取）
